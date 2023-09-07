@@ -19,7 +19,9 @@
               "iam:Get*",
               "iam:DetachRolePolicy",
               "iam:SimulatePrincipalPolicy",
-              "iam:SimulateCustomPolicy"
+              "iam:SimulateCustomPolicy",
+              "iam:CreatePolicyVersion",
+              "iam:DeletePolicyVersion"
           ],
           "Resource": "*"
       }
