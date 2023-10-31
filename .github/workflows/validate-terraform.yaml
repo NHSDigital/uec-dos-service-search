@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         stack:
-          - service_search
+          - application
     steps:
       - name: Checkout
         uses: actions/checkout@v4
