@@ -18,6 +18,7 @@
               "iam:SimulatePrincipalPolicy",
               "iam:SimulateCustomPolicy",
               "iam:CreatePolicyVersion",
+              "iam:TagOpenIDConnectProvider",
               "iam:DeletePolicyVersion",
               "iam:DeleteRolePolicy",
               "iam:PutRolePolicy"
