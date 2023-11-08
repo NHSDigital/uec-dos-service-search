@@ -13,13 +13,13 @@ resource "aws_api_gateway_method" "service_search_post" {
     aws_api_gateway_resource.service_search_resource
   ]
 }
-  module "service_search_integrations_post" {
-  source               = "../../modules/api-gateway-integrations"
-  aws_region           = var.aws_region
-  account_id           = local.account_id
-  rest_api_id          = module.ss_rest_api.rest_api_id
-  http_method          = aws_api_gateway_method.service_search_post.http_method
-  gateway_resource_id  = aws_api_gateway_resource.service_search_resource.id
+module "service_search_integrations_post" {
+  source              = "../../modules/api-gateway-integrations"
+  aws_region          = var.aws_region
+  account_id          = local.account_id
+  rest_api_id         = module.ss_rest_api.rest_api_id
+  http_method         = aws_api_gateway_method.service_search_post.http_method
+  gateway_resource_id = aws_api_gateway_resource.service_search_resource.id
 
   depends_on = [
     aws_api_gateway_resource.service_search_resource,
@@ -30,7 +30,7 @@ resource "aws_api_gateway_method" "service_search_post" {
 ######
 # Lambda permissions
 ######
-  /* module "service_search_aws_lambda_permission" {
+/* module "service_search_aws_lambda_permission" {
   source               = "../../modules/api-gateway-permissions"
   aws_region           = var.aws_region
   account_id           = local.account_id
