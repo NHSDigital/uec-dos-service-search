@@ -73,19 +73,19 @@ jobs:
   #  secrets: inherit
   deploy-application-infrastructure:
     name: Run application terraform
-      needs:
-        [
-          #unit-tests,
-          validate-terraform,
-          derive-tf-versions,
-        ]
-      uses: ./.github/workflows/action-infrastructure-stack.yaml
-      with:
-        github_environment: dev
-        stack: application
-        action: plan
-        tf_vers: ${{needs.derive-tf-versions.outputs.maxVersion}}
-      secrets: inherit
+    needs:
+      [
+        #unit-tests,
+        validate-terraform,
+        derive-tf-versions,
+      ]
+    uses: ./.github/workflows/action-infrastructure-stack.yaml
+    with:
+      github_environment: dev
+      stack: application
+      action: plan
+      tf_vers: ${{needs.derive-tf-versions.outputs.maxVersion}}
+    secrets: inherit
   # build-and-deploy-application-code:
   #   runs-on: ubuntu-latest
   #   environment: dev
