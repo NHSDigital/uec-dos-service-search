@@ -1,0 +1,11 @@
+allure-behave
+allure-pytest
+allure-python-commons
+assertpy
+behave
+boto3
+pytest
+botocore
+boto3-helpers
+pprintpp
+coverage==7.3.1

@@ -30,28 +30,27 @@ module "service_search_integrations_post" {
 ######
 # Lambda permissions
 ######
-/* module "service_search_aws_lambda_permission" {
+module "service_search_aws_lambda_permission" {
   source               = "../../modules/api-gateway-permissions"
   aws_region           = var.aws_region
   account_id           = local.account_id
-  lambda_function_name = var.service_search_function_name
+  lambda_function_name = var.commissioning_profiler_function_name
   rest_api_id          = module.ss_rest_api.rest_api_id
 }
-*/
+
 #####
 # CORS
 #####
-/* module "healthcare_services_enable_cors_on_healthcare_services" {
+module "service_search_enable_cors_on_service_search" {
   source          = "squidfunk/api-gateway-enable-cors/aws"
   version         = "0.3.3"
   api_id          = module.ss_rest_api.rest_api_id
-  api_resource_id = aws_api_gateway_resource.healthcare_services_resource.id
+  api_resource_id = aws_api_gateway_resource.service_search_resource.id
 
   depends_on = [
-    aws_api_gateway_resource.healthcare_services_resource,
+    aws_api_gateway_resource.service_search_resource,
     module.ss_rest_api
   ]
-} */
-
+}
 
 
