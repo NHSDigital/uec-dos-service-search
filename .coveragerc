@@ -19,4 +19,3 @@ omit =
         */app.py
         **/*database_populator.py
         **/*ods_location_comparator.py
-       
