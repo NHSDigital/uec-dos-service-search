@@ -41,7 +41,7 @@ module "service_search_aws_lambda_permission" {
 #####
 # CORS
 #####
-module "service_search_enable_cors_on_service_search" {
+/* module "service_search_enable_cors_on_service_search" {
   source          = "squidfunk/api-gateway-enable-cors/aws"
   version         = "0.3.3"
   api_id          = module.ss_rest_api.rest_api_id
@@ -51,6 +51,6 @@ module "service_search_enable_cors_on_service_search" {
     aws_api_gateway_resource.service_search_resource,
     module.ss_rest_api
   ]
-}
+} */
 
 

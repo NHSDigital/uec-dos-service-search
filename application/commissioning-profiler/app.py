@@ -1,7 +1,7 @@
 from chalice import Chalice
 from chalicelib.service import basic_lambda_handler
 
-app = Chalice(app_name="my-chalice-app")
+app = Chalice(app_name="commissioning-profiler")
 
 
 @app.route("/")
