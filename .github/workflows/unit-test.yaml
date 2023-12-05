@@ -32,8 +32,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
-#  TODO when tests written uncomment the line below
-  - name: Run unit test script
-    run: |
-      export AWS_DEFAULT_REGION=${{ vars.AWS_REGION }}
-      ./scripts/unit-tests.sh
+      - name: Run unit test script
+        run: |
+          export AWS_DEFAULT_REGION=${{ vars.AWS_REGION }}
+          ./scripts/unit-tests.sh
