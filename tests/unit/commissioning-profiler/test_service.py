@@ -1,6 +1,7 @@
 from chalice.test import Client
 from app import app
 
+
 def test_chalice_app_lambda_route():
     with Client(app) as client:
         # Simulate an HTTP POST request to the /lambda endpoint with a JSON payload
