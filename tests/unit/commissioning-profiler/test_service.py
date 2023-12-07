@@ -1,6 +1,7 @@
 from chalice.test import Client
 from chalicelib.service import app
 
+
 def test_chalice_app_lambda_route():
     with Client(app) as client:
         response = client.http.post(
