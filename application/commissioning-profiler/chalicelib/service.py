@@ -1,13 +1,16 @@
 from chalice import Chalice
 
+
 app = Chalice(app_name="commissioning-profiler")
 
-def basic_lambda_handler(event, context):
 
+def basic_lambda_handler(event, context):
     body = event.get("body", {})
     key = body.get("key", "")
 
+
     result_body = f"Received key: {key}"
+
 
     response = {
         "statusCode": 200,
