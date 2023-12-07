@@ -5,7 +5,8 @@ app = Chalice(app_name="commissioning-profiler")
 
 def basic_lambda_handler(event, context):
     body = event.get("body", {})
-    key = body.get("key", "")
+    key = body.get("key", "test")
+
 
     result_body = f"Received key: {key}"
 
@@ -32,5 +33,11 @@ def lambda_function():
         "httpMethod": request.method,
         "path": request.context["resourcePath"],
     }
+
+    # Create a dummy context
+    context = {
+        "aws_request_id": "dummy_request_id"
+    }
+
     context = {}
     return basic_lambda_handler(event, context)
