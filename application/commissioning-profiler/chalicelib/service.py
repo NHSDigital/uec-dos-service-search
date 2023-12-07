@@ -7,9 +7,7 @@ def basic_lambda_handler(event, context):
     body = event.get("body", {})
     key = body.get("key", "test")
 
-
     result_body = f"Received key: {key}"
-
     response = {
         "statusCode": 200,
         "body": result_body,
@@ -35,9 +33,7 @@ def lambda_function():
     }
 
     # Create a dummy context
-    context = {
-        "aws_request_id": "dummy_request_id"
-    }
+    context = {"aws_request_id": "dummy_request_id"}
 
     context = {}
     return basic_lambda_handler(event, context)
