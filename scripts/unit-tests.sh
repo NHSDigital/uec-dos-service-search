@@ -48,6 +48,7 @@ done
 #coverage run --source=$APPLICATION_DIR  -m pytest $APPLICATION_DIR/*
 coverage report
 coverage html
+coverage xml
 
 #  now clear down copied test code after testing
 for path in "$APPLICATION_DIR"/*/ ; do
