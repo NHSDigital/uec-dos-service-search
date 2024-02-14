@@ -21,7 +21,9 @@
               "iam:TagOpenIDConnectProvider",
               "iam:DeletePolicyVersion",
               "iam:DeleteRolePolicy",
-              "iam:PutRolePolicy"
+              "iam:PutRolePolicy",
+              "iam:UntagPolicy",
+              "iam:UntagRole"
           ],
           "Effect": "Allow",
           "Resource": "*",
