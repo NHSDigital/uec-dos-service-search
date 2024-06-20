@@ -65,7 +65,7 @@ fi
 
 COMMON_TF_VARS_FILE="common.tfvars"
 STACK_TF_VARS_FILE="$STACK.tfvars"
-PROJECT_TF_VARS_FILE="$ACCOUNT_PROJECT-project.tfvars"
+PROJECT_TF_VARS_FILE="project.tfvars"
 ENV_TF_VARS_FILE="$ACCOUNT_TYPE.tfvars"
 
 echo "Preparing to run terraform $ACTION for stack $STACK to terraform workspace $TERRAFORM_WORKSPACE_NAME for account type $ACCOUNT_TYPE and project $ACCOUNT_PROJECT"
