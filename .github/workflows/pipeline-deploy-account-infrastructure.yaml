@@ -1,0 +1,69 @@
+name: Pipeline Deploy Account Level Infrastructure
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+    metadata:
+      name: "Get Metadata"
+      uses: NHSDigital/uec-dos-management/.github/workflows/metadata.yaml@latest
+    deploy-account-infrastructure-apply-dev:
+      name: "Deploy Account Level Infrastructure to dev account"
+      needs:
+        [
+          metadata,
+        ]
+      uses: NHSDigital/uec-dos-management/.github/workflows/deploy-infrastructure.yaml@latest
+      with:
+        environment: dev
+        domain: "uec-dos-service-management"
+        workspace: ${{ needs.metadata.outputs.workspace }}
+        stacks: '["network", "aurora", "terraform_management", "github-runner"]'
+        action: apply
+      secrets: inherit
+    deploy-account-infrastructure-apply-int:
+        name: "Deploy Account Level Infrastructure to int account"
+        needs:
+          [
+            metadata,
+          ]
+        uses: NHSDigital/uec-dos-management/.github/workflows/deploy-infrastructure.yaml@latest
+        with:
+          environment: int
+          domain: "uec-dos-service-management"
+          workspace: ${{ needs.metadata.outputs.workspace }}
+          stacks: '["network", "terraform_management", "github-runner"]'
+          action: apply
+        secrets: inherit
+    deploy-account-infrastructure-apply-test:
+      name: "Deploy Account Level Infrastructure to test account"
+      needs:
+        [
+          metadata,
+        ]
+
+      uses: NHSDigital/uec-dos-management/.github/workflows/deploy-infrastructure.yaml@latest
+      with:
+        environment: test
+        domain: "uec-dos-service-management"
+        workspace: ${{ needs.metadata.outputs.workspace }}
+        stacks: '["network", "terraform_management", "github-runner"]'
+        action: apply
+      secrets: inherit
+    slack-notifications:
+      name: Send notification to slack
+      needs: [
+        metadata,
+        deploy-account-infrastructure-apply-dev,
+        deploy-account-infrastructure-apply-test,
+        deploy-account-infrastructure-apply-int
+      ]
+      if: always()
+      uses: NHSDigital/uec-dos-management/.github/workflows/slack-notifications.yaml@latest
+      with:
+        env: dev
+      secrets: inherit
+
+

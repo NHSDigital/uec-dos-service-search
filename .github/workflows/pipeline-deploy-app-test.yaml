@@ -3,78 +3,68 @@ name: Pipeline Deployment Application Test Environment
 on:
   workflow_call:
     inputs:
-      git_tag:
-        description: "Defines git commit tag to be used for deployment"
+      workspace:
+        description: "The workspace to deploy the service into"
+        required: true
+        type: string
+      tag:
+        description: "Defines the tag to be used for deployment"
+        required: true
+        type: string
+      commit_hash:
+        description: "The commit hash to identify the version of artefacts"
+        required: true
+        type: string
+      artefact_bucket_name:
+        description: "The name of domain repository for artefacts"
         required: true
         type: string
 
 jobs:
-  derive-tf-versions:
-    name: Derive terraform version
-    uses: ./.github/workflows/derive-tf-version.yaml
-    with:
-      git_ref: ${{ inputs.git_tag }}
-  get-metadata:
-    name: Get metadata
-    runs-on: ubuntu-latest
-    outputs:
-      build_datetime: ${{ steps.metadata.outputs.build_datetime }}
-      build_timestamp: ${{ steps.metadata.outputs.build_timestamp }}
-      build_epoch: ${{ steps.metadata.outputs.build_epoch }}
-    steps:
-      - id: metadata
-        run: |
-          datetime=$(date -u +'%Y-%m-%dT%H:%M:%S%z')
-          echo "build_datetime=$datetime" >> $GITHUB_OUTPUT
-          echo "build_timestamp=$(date --date=$datetime -u +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
-          echo "build_epoch=$(date --date=$datetime -u +'%s')" >> $GITHUB_OUTPUT
-          echo "triggering action: ${{ github.event_name }}"
-          echo "ref type: ${{ github.ref_type }}"
-          echo "triggering reference: ${{ github.ref_name }}"
-          echo "deploying from git tag ${{ inputs.git_tag }}"
-  derive-deployment-workspace:
-    name: Derive deployment workspace
-    runs-on: ubuntu-latest
-    outputs:
-      deployment_workspace: ${{ steps.derive-workspace-from-tag.outputs.deployment_workspace }}
-    steps:
-      - id: derive-workspace-from-tag
-        name: Extract deployment workspace from git tag
-        run: |
-            echo "deployment_workspace=$(awk -F- '{print $1}' <<< ${{ inputs.git_tag }})-$(awk -F- '{print $2}' <<< ${{ inputs.git_tag }})" >> $GITHUB_OUTPUT
   deploy-application-infrastructure:
-    name: Run application terraform
-    needs:
-      [
-        derive-tf-versions,
-        derive-deployment-workspace,
-      ]
-    uses: ./.github/workflows/action-infrastructure-stack.yaml
+    name: Deploy application infrastructure
+    uses: NHSDigital/uec-dos-management/.github/workflows/deploy-infrastructure.yaml@latest
     with:
-      github_environment: "test"
-      deployment_workspace: ${{ needs.derive-deployment-workspace.outputs.deployment_workspace }}
-      stack: application
-      action: plan
-      tf_vers: ${{needs.derive-tf-versions.outputs.maxVersion}}
-      git_ref: ${{ inputs.git_tag }}
+      environment: test
+      workspace: ${{ inputs.workspace }}
+      domain: "uec-dos-service-management"
+      stacks: "['application', 'domain-test']"
+      tag: ${{ inputs.tag }}
+      action: apply
     secrets: inherit
-  integration-test:
-    name: Run integration tests
-    runs-on: ubuntu-latest
+  deploy-application:
+    name: Deploy lambda application code
     needs:
       [
-        get-metadata,
         deploy-application-infrastructure,
       ]
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-      - name: List Variables
-        run: |
-          export BUILD_DATETIME="${{ needs.get-metadata.outputs.build_datetime }}"
-          export BUILD_TIMESTAMP="${{ needs.get-metadata.outputs.build_timestamp }}"
-          export BUILD_EPOCH="${{ needs.get-metadata.outputs.build_epoch }}"
-          echo "Integration tests invoked"
-      # - name: Run Tests ...
-      #   run: |
-      #     ?
+    uses: NHSDigital/uec-dos-management/.github/workflows/deploy-lambda-code.yaml@latest
+    with:
+      directory: 'application'
+      environment: test
+      workspace: ${{ inputs.workspace }}
+      services:
+        "[
+          'healthcare-services-data-manager',
+          'locations-data-manager',
+          'organisation-affiliations-data-manager',
+          'organisations-data-manager',
+          'questionnaire-responses-data-manager',
+          'questionnaires-data-manager'
+        ]"
+      commit_hash: ${{ inputs.commit_hash }}
+      artefact_bucket_name: ${{ inputs.artefact_bucket_name }}
+    secrets: inherit
+
+  domain-tests:
+    name: Run domain tests
+    needs:
+      [
+        deploy-application-infrastructure,
+        deploy-application,
+      ]
+    uses: NHSDigital/uec-dos-management/.github/workflows/domain-test.yaml@latest
+    with:
+      environment: test
+      workspace: ${{ inputs.workspace }}
+    secrets: inherit
