@@ -113,3 +113,5 @@ export TF_VAR_oidc_thumbprint=$THUMBPRINT
 export TF_VAR_oidc_client="sts.amazonaws.com"
 export STACK=github-runner
 /bin/bash ./scripts/action-infra-stack.sh
+
+

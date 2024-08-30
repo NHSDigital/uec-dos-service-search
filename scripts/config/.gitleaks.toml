@@ -17,7 +17,11 @@ regexes = [
 
 [allowlist]
 files = ['.terraform.lock.hcl', 'poetry.lock', 'yarn.lock']
-Regexes = '''========================================='''
+Regexes = ['''=========================================''',
+# Allow AWS account number for Lambda Layers
+'''(.*)017000801446(.*)''',
+'''(.*)336392948345(.*)'''
+]
 
 [[rules]]
 description = "DynamoDB Endpoints"
